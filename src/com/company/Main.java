@@ -2,6 +2,7 @@ package com.company;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -15,9 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        ReturnArticleName2();
-        //InputInDataBase();
-
+        InputInDataBase();
     }
 
     static ArrayList<String> ReturnArticleName1()
@@ -34,7 +33,7 @@ public class Main {
 
             Elements article;
 
-            for (int i = 2; i <=10; i++) {
+            for (int i = 2; i <=7; i++) {
 
                 article = articles.select("tr [id=newstr" + i + "]");
 
@@ -63,14 +62,20 @@ public class Main {
 
 
 
-            Elements articles = doc.select("div [class=col-xs-12 col-md-8 col-lg-9]");
+            Elements articles = doc.select("div [data-key=1]");
             //System.out.println(articles.text());
 
             Elements article;
 
-            article = articles.select("div [class=c-news-card]");
+            article = articles.select("div [class=c-news-card__head]");
 
-            System.out.println(article.select("div [class=c-news-card__head]").text());
+            //System.out.println(article.select("div [class=c-news-card__head]").text());
+                for (Element news : article)
+                {
+                    //System.out.println((numberElement+1) + "\n"+news.text());
+                    list.add(news.text());
+                }
+
 
 
         }
@@ -83,7 +88,7 @@ public class Main {
 
     }
 
-    static ArrayList<String> ReturnArticleUrl()
+    static ArrayList<String> ReturnArticleUrl1()
     {
         ArrayList<String> list = new ArrayList<>();
         String url = "https://dumskaya.net/";
@@ -115,6 +120,106 @@ public class Main {
 
         return list;
 
+    }
+
+    static ArrayList<String> ReturnArticleUrl2()
+    {
+        ArrayList<String> list = new ArrayList<>();
+        String url = "https://www.048.ua/news";
+        try
+        {
+            Document doc = Jsoup.connect(url).get();
+
+
+
+            Elements articles = doc.select("div [data-key=0]");
+
+            Elements article;
+
+            article = articles.select("div [class=c-news-card__head]");
+
+            int numberElement = 0;
+            for (Element news : article)
+            {
+                list.add("https://www.048.ua" + article.select("a").attr("href"));
+                numberElement++;
+            }
+
+
+
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    static ArrayList<String> ReturnArticleName3()
+    {
+        ArrayList<String> list = new ArrayList<>();
+        String url = "https://od.vgorode.ua/news/";
+        try
+        {
+            Document doc = Jsoup.connect(url).get();
+
+
+
+            Elements articles = doc.select("div [class=row]");
+            //System.out.println(articles.text());
+
+            Elements article = articles.select("div [class=col-xs-12 col-sm-6 col-lg-4]").select("div [class=title]");
+            //System.out.println(article.select("a").text());
+
+            for(Element news : article)
+            {
+                //System.out.println(news.text());
+                list.add(news.text());
+            }
+
+
+
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        return list;
+
+    }
+
+    static ArrayList<String> ReturnArticleUrl3()
+    {
+        ArrayList<String> list = new ArrayList<>();
+        String url = "https://od.vgorode.ua/news/";
+        try
+        {
+            Document doc = Jsoup.connect(url).get();
+
+
+
+            Elements articles = doc.select("div [class=row]");
+            //System.out.println(articles.text());
+
+            Elements article = articles.select("div [class=col-xs-12 col-sm-6 col-lg-4]").select("div [class=title]");
+            //System.out.println(article.select("a").text());
+
+            for(Element news : article)
+            {
+                list.add(news.select("a").attr("href"));
+            }
+
+
+
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 
     public static void InputInDataBase()
@@ -151,11 +256,19 @@ public class Main {
 
             PreparedStatement preparedStatement = null;
 
+
+
             for (int i = 0; i < ReturnArticleName1().size(); i++) {
-                String query = "INSERT INTO article (name, url) VALUES ('" + ReturnArticleName1().get(i) + "','" + ReturnArticleUrl().get(i) + "')";
-                System.out.println(query);
-                preparedStatement = con.prepareStatement(query);
+                String query1 = "INSERT INTO article (name, url) VALUES ('" + ReturnArticleName1().get(i) + "','" + ReturnArticleUrl1().get(i) + "')";
+                String query2 = "INSERT INTO article (name, url) VALUES ('" + ReturnArticleName2().get(i) + "','" + ReturnArticleUrl2().get(i) + "')";
+                String query3 = "INSERT INTO article (name, url) VALUES ('" + ReturnArticleName3().get(i) + "','" + ReturnArticleUrl3().get(i) + "')";
+                preparedStatement = con.prepareStatement(query1);
                 preparedStatement.executeUpdate();
+                preparedStatement = con.prepareStatement(query2);
+                preparedStatement.executeUpdate();
+                preparedStatement = con.prepareStatement(query3);
+                preparedStatement.executeUpdate();
+
             }
 
 
@@ -181,5 +294,6 @@ public class Main {
         }
     }
 
+    
 
 }
