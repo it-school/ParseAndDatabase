@@ -19,11 +19,15 @@ public class Main {
 
         Scanner in = new Scanner(System.in);
         ArrayList<String> list = new ArrayList<>();
-        for(int i = 0; i<3; i++)
+        for(int i = 0; i<2; i++)
         {
             list.add(in.nextLine());
         }
-        CheckAlternative(list).toString();
+        for(int i = 0; i<CheckAlternative(list).size(); i++)
+        {
+            System.out.println(CheckAlternative(list));
+        }
+
         //InputInDataBase();
     }
 
@@ -304,7 +308,7 @@ public class Main {
 
     static ArrayList<String> CheckAlternative(ArrayList<String> articleNamesList)
     {
-        
+
 
         ArrayList<String> list = new ArrayList<>();
 
@@ -314,15 +318,16 @@ public class Main {
             String word2[];
             word1 = articleNamesList.get(i).split(" ");
             word2 = articleNamesList.get(i+1).split(" ");
-            if(word1.length<word2.length)
+            if(word1.length<word2.length || word1.length == word2.length)
             {
                 for(int j = 0; j<word1.length; j++)
                 {
                     for(int k = 0; k<word1.length; k++)
                     {
-                        if(word1[j] == word2[k])
+                        if(word1[j].equals(word2[k]))
                         {
                             list.add(articleNamesList.get(i));
+                            break;
                         }
                     }
                 }
