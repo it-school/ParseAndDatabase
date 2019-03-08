@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.Scanner;
 
 import static java.sql.DriverManager.getConnection;
 
@@ -16,7 +17,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        InputInDataBase();
+        Scanner in = new Scanner(System.in);
+        ArrayList<String> list = new ArrayList<>();
+        for(int i = 0; i<3; i++)
+        {
+            list.add(in.nextLine());
+        }
+        CheckAlternative(list).toString();
+        //InputInDataBase();
     }
 
     static ArrayList<String> ReturnArticleName1()
@@ -222,7 +230,7 @@ public class Main {
         return list;
     }
 
-    public static void InputInDataBase()
+    static void InputInDataBase()
     {
         Connection con = null;
 
@@ -294,6 +302,35 @@ public class Main {
         }
     }
 
-    
+    static ArrayList<String> CheckAlternative(ArrayList<String> articleNamesList)
+    {
+        
+
+        ArrayList<String> list = new ArrayList<>();
+
+        for(int i = 0; i < articleNamesList.size() - 1; i++)
+        {
+            String word1[];
+            String word2[];
+            word1 = articleNamesList.get(i).split(" ");
+            word2 = articleNamesList.get(i+1).split(" ");
+            if(word1.length<word2.length)
+            {
+                for(int j = 0; j<word1.length; j++)
+                {
+                    for(int k = 0; k<word1.length; k++)
+                    {
+                        if(word1[j] == word2[k])
+                        {
+                            list.add(articleNamesList.get(i));
+                        }
+                    }
+                }
+            }
+        }
+
+        return list;
+
+    }
 
 }
