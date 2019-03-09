@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -21,7 +22,7 @@ public class Main {
         ArrayList<String> list = new ArrayList<>();
         for(int i = 0; i<2; i++)
         {
-            list.add(in.nextLine());
+            list.add(i+"Hello; Sasha, egor brothers");//in.nextLine());
         }
         for(int i = 0; i<CheckAlternative(list).size(); i++)
         {
@@ -316,24 +317,40 @@ public class Main {
         {
             String word1[];
             String word2[];
-            word1 = articleNamesList.get(i).split(" ");
-            word2 = articleNamesList.get(i+1).split(" ");
+            word1 = articleNamesList.get(i).split("[^A-z0-9]");
+            System.out.println("\n1:");
+            ArrayList<String> words1 =  new ArrayList<>();
+            for (int k = 0; k<word1.length; k++) {
+                if (word1[k].length() > 1)
+                {
+                    words1.add(word1[k]);
+                    System.out.println(word1[k]);
+                }
+            }
+
+            System.out.println("\n2:");
+            ArrayList<String> words2 =  new ArrayList<>();
+            word2 = articleNamesList.get(i+1).split("[^A-z0-9]");
+            for (int k = 0; k<word2.length; k++) {
+                if (word2[k].length() > 1)
+                {
+                    words1.add(word2[k]);
+                    System.out.println(word2[k]);
+                }
+            }
+
             if(word1.length<word2.length || word1.length == word2.length)
             {
                 for(int j = 0; j<word1.length; j++)
                 {
-                    for(int k = 0; k<word1.length; k++)
-                    {
-                        if(word1[j].equals(word2[k]))
+                        if(word1[j].equals(word2[j]))
                         {
                             list.add(articleNamesList.get(i));
                             break;
                         }
-                    }
                 }
             }
         }
-
         return list;
 
     }
